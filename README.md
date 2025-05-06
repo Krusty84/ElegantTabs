@@ -409,6 +409,145 @@ struct SettingsView: View {
 ```
 <img width="900" alt="image" src="https://github.com/user-attachments/assets/c1701c94-be9a-4bc7-8d0f-6b41e8575cce" />
 
+### Place your Tab application in Menu Bar
+
+```swift
+
+import SwiftUI
+import AppKit
+import ElegantTabs
+
+@main
+struct MyApp: App {
+    var body: some Scene {
+        MenuBarExtra {
+            MenuBarContentView()
+                .frame(width: 300, height: 200)
+        } label: {
+            Image(systemName: "dot.radiowaves.left.and.right")
+        }
+        .menuBarExtraStyle(.window)
+    }
+}
+
+// Switch between MainWindow (tabs) and InfoWindow by holding Option
+struct MenuBarContentView: View {
+    @State private var optionKey = false
+
+    var body: some View {
+        Group {
+            if optionKey {
+                InfoWindow()
+            } else {
+                MainWindow()
+            }
+        }
+        .onAppear {
+            optionKey = NSEvent.modifierFlags.contains(.option)
+        }
+    }
+}
+
+//MainWindow
+
+struct MainWindow: View {
+    @State private var selected = 0
+
+    let style = TabStyle(
+        selectedColor: .white,
+        unselectedColor: .blue.opacity(0.7),
+        hoverBackground: Color.blue.opacity(0.2),
+        selectedBackground: Color.blue,
+        backgroundColor: Color(NSColor.windowBackgroundColor),
+        iconSize: 20,
+        font: .subheadline,
+        cornerRadius: 8,
+        padding: 10,
+        tabHeight: 45,
+        selectedPadding: 4
+    )
+
+    var body: some View {
+        ElegantTabsView(selection: $selected, style: style) {
+            TabItem(title: "Status", icon: .system(name: "antenna.radiowaves.left.and.right")) {
+                StatusView()
+            }
+            TabItem(title: "Settings", icon: .system(name: "gearshape.fill")) {
+                SettingsView()
+            }
+        }
+    }
+}
+
+
+struct InfoWindow: View {
+    @State private var selected = 0
+
+    var body: some View {
+        ElegantTabsView(selection: $selected) {
+            TabItem(title: "About", icon: .system(name: "info.circle")) {
+                AboutView()
+            }
+            TabItem(title: "Help", icon: .system(name: "questionmark.circle")) {
+                HelpView()
+            }
+        }
+    }
+}
+
+
+struct StatusView: View {
+    var body: some View {
+        VStack {
+            Text("All systems nominal")
+                .font(.headline)
+            Text("Last check: \(Date(), format: .dateTime.hour().minute())")
+                .font(.caption)
+        }
+        .padding()
+    }
+}
+
+struct AboutView: View {
+    var body: some View {
+        VStack(spacing: 8) {
+            Text("My Menu Bar App").font(.title2).bold()
+            Text("Version 1.0.0").font(.caption)
+            Text("© 2025 My Company").font(.footnote).foregroundColor(.secondary)
+        }
+        .padding()
+    }
+}
+
+// Use your existing SettingsView here
+struct SettingsView: View {
+    @State private var notificationsOn = true
+    @State private var darkModeOn = false
+
+    var body: some View {
+        Form {
+            Section("Preferences") {
+                Toggle("Enable Notifications", isOn: $notificationsOn)
+                Toggle("Dark Mode",           isOn: $darkModeOn)
+            }
+        }
+        .padding()
+    }
+}
+
+struct HelpView: View {
+    var body: some View {
+        VStack(spacing: 8) {
+            Text("Need help?").font(.headline)
+            Text("Visit example.com/help for docs and support.")
+                .font(.caption)
+                .multilineTextAlignment(.center)
+        }
+        .padding()
+    }
+}
+```
+<img width="350" alt="image" src="https://github.com/user-attachments/assets/e6e86617-ff49-433c-8506-e6eeed8e665c" />
 
 ## Respect
 
