@@ -41,7 +41,7 @@ Import the package and use `ElegantTabsView` in your SwiftUI view. You need a `@
 
 ```swift
 import SwiftUI
-import ElegantTabsView
+import ElegantTabs
 
 struct ContentView: View {
     @State private var selectedTab = 0
