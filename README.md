@@ -269,6 +269,87 @@ struct ContentView: View {
 ```
 <img width="900" alt="image" src="https://github.com/user-attachments/assets/80b91042-05a0-4313-888e-0fab1f89061e" />
 
+### Tab -> your View
+
+```swift
+struct ContentView: View {
+    @State private var selectedTab = 0
+
+    var body: some View {
+        ElegantTabsView(selection: $selectedTab) {
+            TabItem(title: "Profile", icon: .system(name: "person.crop.circle")) {
+                ProfileView()        // your custom view
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+            TabItem(title: "Settings", icon: .system(name: "gearshape.fill")) {
+                SettingsView()       // another custom view
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+        }
+    }
+}
+
+struct ProfileView: View {
+    var body: some View {
+        VStack(spacing: 20) {
+            // Avatar
+            Image(systemName: "person.crop.circle.fill")
+                .resizable()
+                .frame(width: 100, height: 100)
+                .foregroundColor(.blue)
+            
+            // Name
+            Text("David Allan Coe")
+                .font(.title)
+                .fontWeight(.semibold)
+            
+            // Bio
+            Text("macOS Developer\nLoves Swift & SwiftUI")
+                .font(.body)
+                .multilineTextAlignment(.center)
+                .foregroundColor(.secondary)
+            
+            Spacer()
+        }
+        .padding()
+    }
+}
+
+struct SettingsView: View {
+    @State private var notificationsOn = true
+    @State private var darkModeOn = false
+    @State private var autoPlayVideos = false
+
+    var body: some View {
+        Form {
+            Section(header: Text("Preferences")) {
+                Toggle("Enable Notifications", isOn: $notificationsOn)
+                Toggle("Dark Mode", isOn: $darkModeOn)
+                Toggle("Auto-play Videos", isOn: $autoPlayVideos)
+            }
+
+            Section(header: Text("About")) {
+                HStack {
+                    Text("App Version")
+                    Spacer()
+                    Text("1.0.0")
+                        .foregroundColor(.secondary)
+                }
+                HStack {
+                    Text("Terms of Service")
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                        .foregroundColor(.secondary)
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+```
+<img width="900" alt="image" src="https://github.com/user-attachments/assets/bf0ddb2b-c429-416c-822f-7ec6b8ce3442" />
+
+
 ## Respect
 
 Inspired by Jerome [ (myCustomTabView).](https://github.com/jmuzet/myCustomTabView) repository, Merci Dear Jerome!
