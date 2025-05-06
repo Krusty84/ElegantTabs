@@ -4,18 +4,23 @@
 import SwiftUI
 
 // MARK: - TabItem and Builder
-public struct TabItem<Content: View>: Identifiable {
-    public let id = UUID()
-    public let title: String
-    public let icon: TabIcon
-    public let view: Content
+public struct TabItem: Identifiable {
+  public let id = UUID()
+  public let title: String
+  public let icon: TabIcon
+  public let view: AnyView
 
-    public init(title: String, icon: TabIcon, @ViewBuilder view: () -> Content) {
-        self.title = title
-        self.icon = icon
-        self.view = view()
-    }
+  public init<Content: View>(
+    title: String,
+    icon: TabIcon,
+    @ViewBuilder view: () -> Content
+  ) {
+    self.title = title
+    self.icon = icon
+    self.view = AnyView(view())
+  }
 }
+
 
 /// Result builder to collect TabItem instances into an Array
 @resultBuilder
