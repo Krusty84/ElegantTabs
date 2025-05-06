@@ -5,27 +5,26 @@ import SwiftUI
 
 // MARK: - TabItem and Builder
 public struct TabItem: Identifiable {
-  public let id = UUID()
-  public let title: String
-  public let icon: TabIcon
-  public let view: AnyView
+    public let id = UUID()
+    public let title: String
+    public let icon: TabIcon
+    public let view: AnyView      // <<< now AnyView
 
-  public init<Content: View>(
-    title: String,
-    icon: TabIcon,
-    @ViewBuilder view: () -> Content
-  ) {
-    self.title = title
-    self.icon = icon
-    self.view = AnyView(view())
-  }
+    public init<Content: View>(
+        title: String,
+        icon: TabIcon,
+        @ViewBuilder view: () -> Content
+    ) {
+        self.title = title
+        self.icon = icon
+        self.view = AnyView(view())   // wrap in AnyView
+    }
 }
-
 
 /// Result builder to collect TabItem instances into an Array
 @resultBuilder
-public struct TabItemsBuilder<Content: View> {
-    public static func buildBlock(_ items: TabItem<Content>...) -> [TabItem<Content>] {
+public struct TabItemsBuilder {
+    public static func buildBlock(_ items: TabItem...) -> [TabItem] {
         items
     }
 }
@@ -112,9 +111,9 @@ struct TabButtonStyle: ButtonStyle {
 }
 
 // MARK: - GoodProperTabsView View
-public struct ElegantTabsView<Content: View>: View {
+public struct ElegantTabsView: View {
     @Binding public var selection: Int
-    public let items: [TabItem<Content>]
+    public let items: [TabItem]
     public let style: TabStyle
     
     @State private var hoveredIndex: Int? = nil
@@ -122,7 +121,7 @@ public struct ElegantTabsView<Content: View>: View {
     public init(
         selection: Binding<Int>,
         style: TabStyle = .default,
-        @TabItemsBuilder<Content> items: () -> [TabItem<Content>]
+        @TabItemsBuilder items: () -> [TabItem]
     ) {
         self._selection = selection
         self.style = style
@@ -165,93 +164,94 @@ public struct ElegantTabsView<Content: View>: View {
             }
             .background(style.backgroundColor)
 
-            // Show the selected view
+            // show the selected AnyView
             items[selection].view
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
 }
 
+
 // MARK: - Previews
-//#Preview {
-//    Group {
-//        // Default Style
-//        ElegantTabsPreview(selection: 0, style: .default)
-//            .previewDisplayName("Default Style")
-//            .frame(width: 600, height: 400)
-//
-//        // Bold & Large Tabs
-//        ElegantTabsPreview(
-//            selection: 1,
-//            style: TabStyle(
-//                selectedColor: .white,
-//                unselectedColor: .gray,
-//                hoverBackground: Color.blue.opacity(0.2),
-//                selectedBackground: Color.blue.opacity(0.3),
-//                backgroundColor: Color(nsColor: .windowBackgroundColor),
-//                iconSize: 30,
-//                font: .headline,
-//                cornerRadius: 12,
-//                padding: 16,
-//                tabHeight: 60,
-//                selectedPadding: 8
-//            )
-//        )
-//        .previewDisplayName("Bold & Large Tabs")
-//        .frame(width: 600, height: 400)
-//
-//        // Compact Tabs (smaller height, tighter padding)
-//        ElegantTabsPreview(
-//            selection: 2,
-//            style: TabStyle(
-//                padding: 6,
-//                tabHeight: 40,
-//                selectedPadding: 2
-//            )
-//        )
-//        .previewDisplayName("Compact Tabs")
-//        .frame(width: 600, height: 300)
-//
-//        // Small Icons & Captions
-//        ElegantTabsPreview(
-//            selection: 3,
-//            style: TabStyle(
-//                iconSize: 20,
-//                font: .caption2
-//            )
-//        )
-//        .previewDisplayName("Small Icons & Captions")
-//        .frame(width: 600, height: 300)
-//    }
-//}
-//
-//private struct ElegantTabsPreview: View {
-//    @State private var selection: Int
-//    let style: TabStyle
-//
-//    init(selection: Int = 0, style: TabStyle = .default) {
-//        self._selection = State(initialValue: selection)
-//        self.style = style
-//    }
-//
-//    var body: some View {
-//        ElegantTabsView(selection: $selection, style: style) {
-//            TabItem(title: "HF Propagation", icon: .system(name: "antenna.radiowaves.left.and.right")) {
-//                Text("HF Propagation details")
-//                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-//            }
-//            TabItem(title: "VHF Propagation", icon: .system(name: "antenna.radiowaves.left.and.right")) {
-//                Text("VHF Propagation details")
-//                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-//            }
-//            TabItem(title: "Solar Weather", icon: .system(name: "sun.max")) {
-//                Text("Solar Weather data")
-//                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-//            }
-//            TabItem(title: "Settings", icon: .system(name: "gearshape")) {
-//                Text("App Settings")
-//                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-//            }
-//        }
-//    }
-//}
+#Preview {
+    Group {
+        // Default Style
+        ElegantTabsPreview(selection: 0, style: .default)
+            .previewDisplayName("Default Style")
+            .frame(width: 600, height: 400)
+
+        // Bold & Large Tabs
+        ElegantTabsPreview(
+            selection: 1,
+            style: TabStyle(
+                selectedColor: .white,
+                unselectedColor: .gray,
+                hoverBackground: Color.blue.opacity(0.2),
+                selectedBackground: Color.blue.opacity(0.3),
+                backgroundColor: Color(nsColor: .windowBackgroundColor),
+                iconSize: 30,
+                font: .headline,
+                cornerRadius: 12,
+                padding: 16,
+                tabHeight: 60,
+                selectedPadding: 8
+            )
+        )
+        .previewDisplayName("Bold & Large Tabs")
+        .frame(width: 600, height: 400)
+
+        // Compact Tabs (smaller height, tighter padding)
+        ElegantTabsPreview(
+            selection: 2,
+            style: TabStyle(
+                padding: 6,
+                tabHeight: 40,
+                selectedPadding: 2
+            )
+        )
+        .previewDisplayName("Compact Tabs")
+        .frame(width: 600, height: 300)
+
+        // Small Icons & Captions
+        ElegantTabsPreview(
+            selection: 3,
+            style: TabStyle(
+                iconSize: 20,
+                font: .caption2
+            )
+        )
+        .previewDisplayName("Small Icons & Captions")
+        .frame(width: 600, height: 300)
+    }
+}
+
+private struct ElegantTabsPreview: View {
+    @State private var selection: Int
+    let style: TabStyle
+
+    init(selection: Int = 0, style: TabStyle = .default) {
+        self._selection = State(initialValue: selection)
+        self.style = style
+    }
+
+    var body: some View {
+        ElegantTabsView(selection: $selection, style: style) {
+            TabItem(title: "HF Propagation", icon: .system(name: "antenna.radiowaves.left.and.right")) {
+                Text("HF Propagation details")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+            TabItem(title: "VHF Propagation", icon: .system(name: "antenna.radiowaves.left.and.right")) {
+                Text("VHF Propagation details")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+            TabItem(title: "Solar Weather", icon: .system(name: "sun.max")) {
+                Text("Solar Weather data")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+            TabItem(title: "Settings", icon: .system(name: "gearshape")) {
+                Text("App Settings")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+        }
+    }
+}
