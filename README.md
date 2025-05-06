@@ -8,15 +8,19 @@ A simple SwiftUI package for macOS that gives you an easy and nice tab view. You
 
 ## Features
 
-- Easy to add tabs with text and icons
-- Works on macOS only
-- Customizable colors, sizes, and fonts
-- Hover and selected backgrounds
-- Uses SwiftUI and a result builder for clean code
+✅ Easy to add tabs with text and icons
+
+✅ Customizable colors, sizes, and fonts
+
+✅ Hover and selected backgrounds
+
+✅ Uses SwiftUI and a result builder for clean code
+
 
 ## Requirements
 
-- macOS 12.0 Monterey or later
+- Tested on macOS 15
+- Tested on Xcode 16.2
 - Swift 5.7 or later
 
 
