@@ -552,7 +552,3 @@ struct HelpView: View {
 ## Respect
 
 Inspired by Jerome [ (myCustomTabView).](https://github.com/jmuzet/myCustomTabView) repository, Merci Dear Jerome!
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
