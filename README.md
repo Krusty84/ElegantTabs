@@ -349,6 +349,66 @@ struct SettingsView: View {
 ```
 <img width="900" alt="image" src="https://github.com/user-attachments/assets/bf0ddb2b-c429-416c-822f-7ec6b8ce3442" />
 
+### Pass somedate to Tab-View
+
+```swift
+import SwiftUI
+import ElegantTabs
+
+class AppModel: ObservableObject {
+    @Published var username: String = "Bob"
+    @Published var isPremiumUser: Bool = false
+}
+
+struct ContentView: View {
+    @State private var selectedTab = 0
+    @StateObject private var model = AppModel()
+
+    var body: some View {
+        ElegantTabsView(selection: $selectedTab) {
+            TabItem(title: "Profile", icon: .system(name: "person.crop.circle")) {
+                ProfileView()
+            }
+            TabItem(title: "Settings", icon: .system(name: "gearshape.fill")) {
+                SettingsView()
+            }
+        }
+        .environmentObject(model)    // ← here we pass the model down
+    }
+}
+
+struct ProfileView: View {
+    @EnvironmentObject var model: AppModel
+
+    var body: some View {
+        VStack(spacing: 16) {
+            Text("Welcome, \(model.username)!")
+                .font(.title)
+            Text(model.isPremiumUser ? "Premium ✨" : "Free User")
+                .foregroundColor(model.isPremiumUser ? .yellow : .gray)
+        }
+        .padding()
+    }
+}
+
+struct SettingsView: View {
+    @EnvironmentObject var model: AppModel
+
+    var body: some View {
+        Form {
+            Section(header: Text("Account")) {
+                TextField("Name", text: $model.username)
+            }
+            Section(header: Text("Subscription")) {
+                Toggle("Premium User", isOn: $model.isPremiumUser)
+            }
+        }
+        .padding()
+    }
+}
+```
+<img width="900" alt="image" src="https://github.com/user-attachments/assets/c1701c94-be9a-4bc7-8d0f-6b41e8575cce" />
+
 
 ## Respect
 
