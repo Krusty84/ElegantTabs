@@ -40,13 +40,39 @@ public struct TabStyle {
     public var font: Font = .caption
     public var cornerRadius: CGFloat = 8
     public var padding: CGFloat = 12
-    /// Fixed height for all tabs
     public var tabHeight: CGFloat = 50
-    /// Extra spacing around the selected tab
     public var selectedPadding: CGFloat = 4
 
     public static let `default` = TabStyle()
+
+    // <-- add this:
+    public init(
+        selectedColor: Color = Color.blue,
+        unselectedColor: Color = Color.primary,
+        hoverBackground: Color = Color.gray.opacity(0.3),
+        selectedBackground: Color = Color.gray.opacity(0.3),
+        backgroundColor: Color = Color(nsColor: .windowBackgroundColor),
+        iconSize: CGFloat = 24,
+        font: Font = .caption,
+        cornerRadius: CGFloat = 8,
+        padding: CGFloat = 12,
+        tabHeight: CGFloat = 50,
+        selectedPadding: CGFloat = 4
+    ) {
+        self.selectedColor = selectedColor
+        self.unselectedColor = unselectedColor
+        self.hoverBackground = hoverBackground
+        self.selectedBackground = selectedBackground
+        self.backgroundColor = backgroundColor
+        self.iconSize = iconSize
+        self.font = font
+        self.cornerRadius = cornerRadius
+        self.padding = padding
+        self.tabHeight = tabHeight
+        self.selectedPadding = selectedPadding
+    }
 }
+
 
 struct TabButtonStyle: ButtonStyle {
     let style: TabStyle
