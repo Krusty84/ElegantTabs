@@ -373,7 +373,7 @@ struct ContentView: View {
                 SettingsView()
             }
         }
-        .environmentObject(model)    // ← here we pass the model down
+        .environmentObject(model)    // data passing
     }
 }
 
