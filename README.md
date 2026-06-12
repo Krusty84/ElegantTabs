@@ -31,7 +31,7 @@ A simple SwiftUI package for macOS that gives you an easy and nice tab view. You
 1. In Xcode, choose **File ▸ Add Packages…**
 2. Enter the URL of this repository:
    ```
-   https://github.com/Krusty84/ElegantTabsView.git
+   https://github.com/Krusty84/ElegantTabs.git
    ```
 3. Select the version (for example, Up to Next Major 1.0.0) and add it to your app target.
 
