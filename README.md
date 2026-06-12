@@ -35,9 +35,34 @@ A simple SwiftUI package for macOS that gives you an easy and nice tab view. You
    ```
 3. Select the version (for example, Up to Next Major 1.0.0) and add it to your app target.
 
-## Usage
+
+## Usage Examples
+
+This document shows how to use `ElegantTabsView` with plain tab titles and localized tab titles.
+
+Use:
+
+```swift
+TabItem(title: "Home", ...)
+```
+
+for plain non-localized strings.
+
+Use:
+
+```swift
+TabItem(localizedTitle: LocalizedStringKey("tabs.home"), ...)
+```
+
+for keys from `Localizable.xcstrings`.
+
+---
+
+### Usage
 
 Import the package and use `ElegantTabsView` in your SwiftUI view. You need a `@State` or `@Binding` integer to track which tab is selected.
+
+### Plain Titles
 
 ```swift
 import SwiftUI
@@ -52,6 +77,7 @@ struct ContentView: View {
                 Text("Welcome to Home")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
+
             TabItem(title: "Settings", icon: .system(name: "gearshape.fill")) {
                 Text("Settings go here")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -61,7 +87,49 @@ struct ContentView: View {
 }
 ```
 
-## Custom Style
+### Localized Titles
+
+Use `localizedTitle:` for `Localizable.xcstrings` keys.
+
+```swift
+import SwiftUI
+import ElegantTabs
+
+struct ContentView: View {
+    @State private var selectedTab = 0
+
+    var body: some View {
+        ElegantTabsView(selection: $selectedTab) {
+            TabItem(
+                localizedTitle: LocalizedStringKey("tabs.home"),
+                icon: .system(name: "house.fill")
+            ) {
+                Text("Welcome to Home")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+
+            TabItem(
+                localizedTitle: LocalizedStringKey("tabs.settings"),
+                icon: .system(name: "gearshape.fill")
+            ) {
+                Text("Settings go here")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+        }
+    }
+}
+```
+
+Example `Localizable.xcstrings` keys:
+
+```text
+tabs.home = Home
+tabs.settings = Settings
+```
+
+---
+
+### Custom Style
 
 You can change colors, icon size, fonts, padding, and more by passing a custom `TabStyle`.
 
@@ -71,7 +139,7 @@ let customStyle = TabStyle(
     unselectedColor: .gray,
     hoverBackground: Color.blue.opacity(0.2),
     selectedBackground: Color.blue.opacity(0.3),
-    backgroundColor: Color(NSColor.windowBackgroundColor),
+    backgroundColor: Color(nsColor: .windowBackgroundColor),
     iconSize: 28,
     font: .headline,
     cornerRadius: 10,
@@ -84,25 +152,31 @@ ElegantTabsView(selection: $selectedTab, style: customStyle) {
     TabItem(title: "Tab 1", icon: .system(name: "1.circle")) {
         Text("First tab view")
     }
+
     TabItem(title: "Tab 2", icon: .system(name: "2.circle")) {
         Text("Second tab view")
     }
 }
 ```
 
-## Examples
+---
 
 ### Default Style
 
 ```swift
+import SwiftUI
+import ElegantTabs
+
 struct ContentView: View {
     @State private var selectedTab = 0
+
     var body: some View {
         ElegantTabsView(selection: $selectedTab) {
             TabItem(title: "Home", icon: .system(name: "house.fill")) {
                 Text("Welcome to Home")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
+
             TabItem(title: "Settings", icon: .system(name: "gearshape.fill")) {
                 Text("Settings go here")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -111,11 +185,64 @@ struct ContentView: View {
     }
 }
 ```
-<img width="900" alt="image" src="https://github.com/user-attachments/assets/0ae9c3e9-74b2-4f16-984c-ed63357368f6" />
+
+---
+
+### Localized Tabs
+
+```swift
+import SwiftUI
+import ElegantTabs
+
+struct ContentView: View {
+    @State private var selectedTab = 0
+
+    var body: some View {
+        ElegantTabsView(selection: $selectedTab) {
+            TabItem(
+                localizedTitle: LocalizedStringKey("tabs.computing"),
+                icon: .system(name: "desktopcomputer")
+            ) {
+                Text("Computing")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+
+            TabItem(
+                localizedTitle: LocalizedStringKey("tabs.functions"),
+                icon: .system(name: "function")
+            ) {
+                Text("Functions")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+
+            TabItem(
+                localizedTitle: LocalizedStringKey("tabs.storage"),
+                icon: .system(name: "archivebox")
+            ) {
+                Text("Storage")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+
+            TabItem(
+                localizedTitle: LocalizedStringKey("tabs.settings"),
+                icon: .system(name: "gearshape.fill")
+            ) {
+                Text("Settings")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+        }
+    }
+}
+```
+
+---
 
 ### Bold & Large Tabs
 
 ```swift
+import SwiftUI
+import ElegantTabs
+
 struct ContentView: View {
     @State private var selectedTab = 1
 
@@ -124,7 +251,7 @@ struct ContentView: View {
         unselectedColor: .gray,
         hoverBackground: Color.blue.opacity(0.2),
         selectedBackground: Color.blue.opacity(0.3),
-        backgroundColor: Color(NSColor.windowBackgroundColor),
+        backgroundColor: Color(nsColor: .windowBackgroundColor),
         iconSize: 30,
         font: .headline,
         cornerRadius: 12,
@@ -139,6 +266,7 @@ struct ContentView: View {
                 Text("Dashboard Screen")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
+
             TabItem(title: "Profile", icon: .system(name: "person.crop.circle")) {
                 Text("Profile Screen")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -147,11 +275,15 @@ struct ContentView: View {
     }
 }
 ```
-<img width="900" alt="image" src="https://github.com/user-attachments/assets/8ee267dd-51b9-41ce-b7a6-98b8105e4ea8" />
+
+---
 
 ### Compact Tabs
 
 ```swift
+import SwiftUI
+import ElegantTabs
+
 struct ContentView: View {
     @State private var selectedTab = 0
 
@@ -160,7 +292,7 @@ struct ContentView: View {
         unselectedColor: .primary,
         hoverBackground: Color.gray.opacity(0.2),
         selectedBackground: Color.gray.opacity(0.1),
-        backgroundColor: Color(NSColor.windowBackgroundColor),
+        backgroundColor: Color(nsColor: .windowBackgroundColor),
         iconSize: 20,
         font: .caption,
         cornerRadius: 6,
@@ -175,10 +307,12 @@ struct ContentView: View {
                 Text("File List")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
+
             TabItem(title: "Search", icon: .system(name: "magnifyingglass")) {
                 Text("Search View")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
+
             TabItem(title: "Help", icon: .system(name: "questionmark.circle")) {
                 Text("Help Center")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -187,11 +321,15 @@ struct ContentView: View {
     }
 }
 ```
-<img width="900" alt="image" src="https://github.com/user-attachments/assets/cf3b2030-a577-444f-8d07-c78bb9bcf6a7" />
+
+---
 
 ### Colorful Accent Tabs
 
 ```swift
+import SwiftUI
+import ElegantTabs
+
 struct ContentView: View {
     @State private var selectedTab = 2
 
@@ -200,7 +338,7 @@ struct ContentView: View {
         unselectedColor: .white.opacity(0.7),
         hoverBackground: Color.purple.opacity(0.3),
         selectedBackground: Color.purple,
-        backgroundColor: Color.black,
+        backgroundColor: .black,
         iconSize: 24,
         font: .subheadline,
         cornerRadius: 10,
@@ -215,10 +353,12 @@ struct ContentView: View {
                 Text("Music Player")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
+
             TabItem(title: "Videos", icon: .system(name: "play.rectangle")) {
                 Text("Video Gallery")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
+
             TabItem(title: "Podcasts", icon: .system(name: "mic.fill")) {
                 Text("Podcast List")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -227,11 +367,15 @@ struct ContentView: View {
     }
 }
 ```
-<img width="900" alt="image" src="https://github.com/user-attachments/assets/2a10d527-27b3-4461-aa39-bf6055915420" />
+
+---
 
 ### Small Icons & Captions
 
 ```swift
+import SwiftUI
+import ElegantTabs
+
 struct ContentView: View {
     @State private var selectedTab = 0
 
@@ -240,7 +384,7 @@ struct ContentView: View {
         unselectedColor: .secondary,
         hoverBackground: Color.green.opacity(0.2),
         selectedBackground: Color.green.opacity(0.3),
-        backgroundColor: Color(NSColor.windowBackgroundColor),
+        backgroundColor: Color(nsColor: .windowBackgroundColor),
         iconSize: 18,
         font: .caption2,
         cornerRadius: 8,
@@ -255,10 +399,12 @@ struct ContentView: View {
                 Text("Chat Room")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
+
             TabItem(title: "Calls", icon: .system(name: "phone")) {
                 Text("Call Log")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
+
             TabItem(title: "Settings", icon: .system(name: "gear")) {
                 Text("App Settings")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -267,22 +413,27 @@ struct ContentView: View {
     }
 }
 ```
-<img width="900" alt="image" src="https://github.com/user-attachments/assets/80b91042-05a0-4313-888e-0fab1f89061e" />
 
-### Tab -> your View
+---
+
+### Tab -> Your View
 
 ```swift
+import SwiftUI
+import ElegantTabs
+
 struct ContentView: View {
     @State private var selectedTab = 0
 
     var body: some View {
         ElegantTabsView(selection: $selectedTab) {
             TabItem(title: "Profile", icon: .system(name: "person.crop.circle")) {
-                ProfileView()        // your custom view
+                ProfileView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
+
             TabItem(title: "Settings", icon: .system(name: "gearshape.fill")) {
-                SettingsView()       // another custom view
+                SettingsView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
@@ -292,23 +443,20 @@ struct ContentView: View {
 struct ProfileView: View {
     var body: some View {
         VStack(spacing: 20) {
-            // Avatar
             Image(systemName: "person.crop.circle.fill")
                 .resizable()
                 .frame(width: 100, height: 100)
-                .foregroundColor(.blue)
-            
-            // Name
+                .foregroundStyle(.blue)
+
             Text("David Allan Coe")
                 .font(.title)
                 .fontWeight(.semibold)
-            
-            // Bio
+
             Text("macOS Developer\nLoves Swift & SwiftUI")
                 .font(.body)
                 .multilineTextAlignment(.center)
-                .foregroundColor(.secondary)
-            
+                .foregroundStyle(.secondary)
+
             Spacer()
         }
         .padding()
@@ -322,24 +470,25 @@ struct SettingsView: View {
 
     var body: some View {
         Form {
-            Section(header: Text("Preferences")) {
+            Section("Preferences") {
                 Toggle("Enable Notifications", isOn: $notificationsOn)
                 Toggle("Dark Mode", isOn: $darkModeOn)
                 Toggle("Auto-play Videos", isOn: $autoPlayVideos)
             }
 
-            Section(header: Text("About")) {
+            Section("About") {
                 HStack {
                     Text("App Version")
                     Spacer()
                     Text("1.0.0")
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(.secondary)
                 }
+
                 HStack {
                     Text("Terms of Service")
                     Spacer()
                     Image(systemName: "chevron.right")
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(.secondary)
                 }
             }
         }
@@ -347,59 +496,63 @@ struct SettingsView: View {
     }
 }
 ```
-<img width="900" alt="image" src="https://github.com/user-attachments/assets/bf0ddb2b-c429-416c-822f-7ec6b8ce3442" />
 
-### Pass somedate to Tab-View
+---
+
+### Pass Some Data to Tab Views
 
 ```swift
 import SwiftUI
 import ElegantTabs
 
-class AppModel: ObservableObject {
-    @Published var username: String = "Bob"
-    @Published var isPremiumUser: Bool = false
+@Observable
+final class AppModel {
+    var username = "Bob"
+    var isPremiumUser = false
 }
 
 struct ContentView: View {
     @State private var selectedTab = 0
-    @StateObject private var model = AppModel()
+    @State private var model = AppModel()
 
     var body: some View {
         ElegantTabsView(selection: $selectedTab) {
             TabItem(title: "Profile", icon: .system(name: "person.crop.circle")) {
-                ProfileView()
+                ProfileView(model: model)
             }
+
             TabItem(title: "Settings", icon: .system(name: "gearshape.fill")) {
-                SettingsView()
+                AccountSettingsView(model: model)
             }
         }
-        .environmentObject(model)    // data passing
     }
 }
 
 struct ProfileView: View {
-    @EnvironmentObject var model: AppModel
+    let model: AppModel
 
     var body: some View {
         VStack(spacing: 16) {
             Text("Welcome, \(model.username)!")
                 .font(.title)
+
             Text(model.isPremiumUser ? "Premium ✨" : "Free User")
-                .foregroundColor(model.isPremiumUser ? .yellow : .gray)
+                .foregroundStyle(model.isPremiumUser ? .yellow : .gray)
         }
         .padding()
     }
 }
 
-struct SettingsView: View {
-    @EnvironmentObject var model: AppModel
+struct AccountSettingsView: View {
+    @Bindable var model: AppModel
 
     var body: some View {
         Form {
-            Section(header: Text("Account")) {
+            Section("Account") {
                 TextField("Name", text: $model.username)
             }
-            Section(header: Text("Subscription")) {
+
+            Section("Subscription") {
                 Toggle("Premium User", isOn: $model.isPremiumUser)
             }
         }
@@ -407,12 +560,12 @@ struct SettingsView: View {
     }
 }
 ```
-<img width="900" alt="image" src="https://github.com/user-attachments/assets/c1701c94-be9a-4bc7-8d0f-6b41e8575cce" />
 
-### Place your Tab application in Menu Bar
+---
+
+### Place Your Tab Application in the Menu Bar
 
 ```swift
-
 import SwiftUI
 import AppKit
 import ElegantTabs
@@ -430,25 +583,23 @@ struct MyApp: App {
     }
 }
 
-// Switch between MainWindow (tabs) and InfoWindow by holding Option
+// Switch between MainWindow and InfoWindow by holding Option.
 struct MenuBarContentView: View {
-    @State private var optionKey = false
+    @State private var optionKeyPressed = false
 
     var body: some View {
         Group {
-            if optionKey {
+            if optionKeyPressed {
                 InfoWindow()
             } else {
                 MainWindow()
             }
         }
         .onAppear {
-            optionKey = NSEvent.modifierFlags.contains(.option)
+            optionKeyPressed = NSEvent.modifierFlags.contains(.option)
         }
     }
 }
-
-//MainWindow
 
 struct MainWindow: View {
     @State private var selected = 0
@@ -458,7 +609,7 @@ struct MainWindow: View {
         unselectedColor: .blue.opacity(0.7),
         hoverBackground: Color.blue.opacity(0.2),
         selectedBackground: Color.blue,
-        backgroundColor: Color(NSColor.windowBackgroundColor),
+        backgroundColor: Color(nsColor: .windowBackgroundColor),
         iconSize: 20,
         font: .subheadline,
         cornerRadius: 8,
@@ -472,13 +623,13 @@ struct MainWindow: View {
             TabItem(title: "Status", icon: .system(name: "antenna.radiowaves.left.and.right")) {
                 StatusView()
             }
+
             TabItem(title: "Settings", icon: .system(name: "gearshape.fill")) {
                 SettingsView()
             }
         }
     }
 }
-
 
 struct InfoWindow: View {
     @State private var selected = 0
@@ -488,6 +639,7 @@ struct InfoWindow: View {
             TabItem(title: "About", icon: .system(name: "info.circle")) {
                 AboutView()
             }
+
             TabItem(title: "Help", icon: .system(name: "questionmark.circle")) {
                 HelpView()
             }
@@ -495,12 +647,12 @@ struct InfoWindow: View {
     }
 }
 
-
 struct StatusView: View {
     var body: some View {
         VStack {
             Text("All systems nominal")
                 .font(.headline)
+
             Text("Last check: \(Date(), format: .dateTime.hour().minute())")
                 .font(.caption)
         }
@@ -511,15 +663,21 @@ struct StatusView: View {
 struct AboutView: View {
     var body: some View {
         VStack(spacing: 8) {
-            Text("My Menu Bar App").font(.title2).bold()
-            Text("Version 1.0.0").font(.caption)
-            Text("© 2025 My Company").font(.footnote).foregroundColor(.secondary)
+            Text("My Menu Bar App")
+                .font(.title2)
+                .bold()
+
+            Text("Version 1.0.0")
+                .font(.caption)
+
+            Text("© 2026 My Company")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
         }
         .padding()
     }
 }
 
-// Use your existing SettingsView here
 struct SettingsView: View {
     @State private var notificationsOn = true
     @State private var darkModeOn = false
@@ -528,7 +686,7 @@ struct SettingsView: View {
         Form {
             Section("Preferences") {
                 Toggle("Enable Notifications", isOn: $notificationsOn)
-                Toggle("Dark Mode",           isOn: $darkModeOn)
+                Toggle("Dark Mode", isOn: $darkModeOn)
             }
         }
         .padding()
@@ -538,7 +696,9 @@ struct SettingsView: View {
 struct HelpView: View {
     var body: some View {
         VStack(spacing: 8) {
-            Text("Need help?").font(.headline)
+            Text("Need help?")
+                .font(.headline)
+
             Text("Visit example.com/help for docs and support.")
                 .font(.caption)
                 .multilineTextAlignment(.center)
@@ -547,7 +707,70 @@ struct HelpView: View {
     }
 }
 ```
-<img width="350" alt="image" src="https://github.com/user-attachments/assets/e6e86617-ff49-433c-8506-e6eeed8e665c" />
+
+---
+
+### Localized Menu Bar Tabs
+
+```swift
+import SwiftUI
+import AppKit
+import ElegantTabs
+
+@main
+struct MyApp: App {
+    var body: some Scene {
+        MenuBarExtra {
+            MainWindow()
+                .environment(\.locale, Locale(identifier: "ru"))
+                .frame(width: 420, height: 300)
+        } label: {
+            Image(systemName: "cloud")
+        }
+        .menuBarExtraStyle(.window)
+    }
+}
+
+struct MainWindow: View {
+    @State private var selected = 0
+
+    var body: some View {
+        ElegantTabsView(selection: $selected) {
+            TabItem(
+                localizedTitle: LocalizedStringKey("tabs.computing"),
+                icon: .system(name: "desktopcomputer")
+            ) {
+                Text("Computing content")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+
+            TabItem(
+                localizedTitle: LocalizedStringKey("tabs.storage"),
+                icon: .system(name: "archivebox")
+            ) {
+                Text("Storage content")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+
+            TabItem(
+                localizedTitle: LocalizedStringKey("tabs.settings"),
+                icon: .system(name: "gearshape.fill")
+            ) {
+                Text("Settings content")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+        }
+    }
+}
+```
+
+Example `Localizable.xcstrings` keys:
+
+```text
+tabs.computing = Computing / Вычисления
+tabs.storage = Storage / Хранилище
+tabs.settings = Settings / Настройки
+```
 
 ## Respect
 

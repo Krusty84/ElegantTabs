@@ -1,23 +1,50 @@
-// The Swift Programming Language
-// https://docs.swift.org/swift-book
+//
+//  ElegantTabs.swift
+//  ElegantTabs
+//
+//  Created by Sedoykin Alexey on 11/07/2026.
+//
 
 import SwiftUI
 
 // MARK: - TabItem and Builder
 public struct TabItem: Identifiable {
     public let id = UUID()
-    public let title: String
+    public let title: Text
     public let icon: TabIcon
-    public let view: AnyView      // <<< now AnyView
+    public let view: AnyView
 
+    /// Use this initializer for plain, non-localized visible strings.
     public init<Content: View>(
         title: String,
         icon: TabIcon,
         @ViewBuilder view: () -> Content
     ) {
+        self.title = Text(verbatim: title)
+        self.icon = icon
+        self.view = AnyView(view())
+    }
+
+    /// Use this initializer for Localizable.xcstrings keys.
+    public init<Content: View>(
+        localizedTitle: LocalizedStringKey,
+        icon: TabIcon,
+        @ViewBuilder view: () -> Content
+    ) {
+        self.title = Text(localizedTitle)
+        self.icon = icon
+        self.view = AnyView(view())
+    }
+
+    /// Use this initializer when the caller already has a prepared Text.
+    public init<Content: View>(
+        title: Text,
+        icon: TabIcon,
+        @ViewBuilder view: () -> Content
+    ) {
         self.title = title
         self.icon = icon
-        self.view = AnyView(view())   // wrap in AnyView
+        self.view = AnyView(view())
     }
 }
 
@@ -49,7 +76,6 @@ public struct TabStyle {
 
     public static let `default` = TabStyle()
 
-    // <-- add this:
     public init(
         selectedColor: Color = Color.blue,
         unselectedColor: Color = Color.primary,
@@ -77,45 +103,38 @@ public struct TabStyle {
     }
 }
 
-
 struct TabButtonStyle: ButtonStyle {
     let style: TabStyle
     let isSelected: Bool
     let isHovered: Bool
 
     func makeBody(configuration: Configuration) -> some View {
-        // Determine fill color
         let fillColor = isSelected
             ? style.selectedBackground
             : (isHovered ? style.hoverBackground : Color.clear)
 
         return configuration.label
             .font(style.font)
-            .padding(style.padding)                      // Inner padding
-            .frame(height: style.tabHeight)             // Fixed height for all tabs
+            .padding(style.padding)
+            .frame(height: style.tabHeight)
             .background(
                 RoundedRectangle(cornerRadius: style.cornerRadius)
                     .fill(fillColor)
             )
-            .padding(isSelected                       // Outer padding for selected
-                ? style.selectedPadding
-                : 0
-            )
+            .padding(isSelected ? style.selectedPadding : 0)
             .frame(maxWidth: .infinity)
-            .foregroundColor(isSelected
-                ? style.selectedColor
-                : style.unselectedColor
-            )
+            .foregroundColor(isSelected ? style.selectedColor : style.unselectedColor)
             .contentShape(Rectangle())
     }
 }
 
-// MARK: - GoodProperTabsView View
+// MARK: - ElegantTabsView
+
 public struct ElegantTabsView: View {
     @Binding public var selection: Int
     public let items: [TabItem]
     public let style: TabStyle
-    
+
     @State private var hoveredIndex: Int? = nil
 
     public init(
@@ -140,13 +159,15 @@ public struct ElegantTabsView: View {
                             case .system(let name):
                                 Image(systemName: name)
                                     .font(.system(size: style.iconSize))
+
                             case .asset(let name):
                                 Image(name)
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: style.iconSize, height: style.iconSize)
                             }
-                            Text(item.title)
+
+                            item.title
                         }
                         .accessibilityLabel(item.title)
                         .onHover { hovering in
@@ -164,9 +185,17 @@ public struct ElegantTabsView: View {
             }
             .background(style.backgroundColor)
 
-            // show the selected AnyView
-            items[selection].view
+            selectedView
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+    }
+
+    @ViewBuilder
+    private var selectedView: some View {
+        if items.indices.contains(selection) {
+            items[selection].view
+        } else {
+            EmptyView()
         }
     }
 }

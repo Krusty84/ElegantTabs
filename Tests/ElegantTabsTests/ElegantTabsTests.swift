@@ -1,6 +1,13 @@
+//
+//  ElegantTabsTests.swift
+//  ElegantTabs
+//
+//  Created by Sedoykin Alexey on 11/07/2026.
+//
+
 import Testing
 @testable import ElegantTabs
 
 @Test func example() async throws {
-    // Write your test here and use APIs like `#expect(...)` to check expected conditions.
+    // Write test here ...
 }
